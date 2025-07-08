@@ -9,11 +9,11 @@ import { addUser } from "../utils/userSlice";
 const EditProfile = (props) => {
   const [firstName, setFirstName] = useState(props?.userInfo?.firstName);
   const [lastName, setLastName] = useState(props?.userInfo?.lastName);
-  const [age, setAge] = useState(props?.userInfo?.age);
+  const [age, setAge] = useState(props?.userInfo?.age || '');
   const [gender, setGender] = useState(props?.userInfo?.gender);
   const [photoURL, setPhotoURL] = useState(props?.userInfo?.photoURL);
   const [about, setAbout] = useState(props?.userInfo?.about);
-  const [skills, setSkills] = useState(props?.userInfo?.skills);
+  const [skills, setSkills] = useState(props?.userInfo?.skills || '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -91,7 +91,7 @@ const EditProfile = (props) => {
             />
             <label className="label">Gender:</label>
             <select
-              defaultValue="Pick a color"
+              defaultValue="Pick a gender"
               value={gender}
               onChange={(e) => setGender(e.target.value)}
               className="select"
