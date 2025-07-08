@@ -4,14 +4,18 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constant";
+import Loading from "./Loading";
 
 const Login = () => {
   const [emailId, setEmailId] = useState("Karzi@example.com");
   const [password, setPassword] = useState("Karzi@123");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setIsLoading(true);
     try {
       const res = await axios.post(
         BASE_URL + "login",
@@ -24,9 +28,12 @@ const Login = () => {
         }
       );
       dispatch(addUser(res.data));
-      return navigate('/')
+      return navigate("/");
     } catch (error) {
-      console.error("Error-", error.message);
+      setError(error?.response?.data)
+      console.error("Error-", error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -38,12 +45,13 @@ const Login = () => {
         <label className="label">Email</label>
         <input
           type="email"
-          className="input"
+          className="input validator"
+          required
           value={emailId}
           onChange={(e) => setEmailId(e.target.value)}
           placeholder="Email"
         />
-
+        <div className="validator-hint">Enter valid email address</div>
         <label className="label">Password</label>
         <input
           type="password"
@@ -52,10 +60,14 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
         />
-
-        <button className="btn btn-neutral mt-4" onClick={handleLogin}>
-          Login
-        </button>
+          {error && <div className="text-red-700">{error}</div>}
+        {isLoading ? (
+           <div className="flex justify-center mt-4"><Loading size="loading-xl"/></div>
+        ) : (
+          <button className="btn btn-neutral mt-4" onClick={handleLogin}>
+            Login
+          </button>
+        )}
       </fieldset>
     </div>
   );
